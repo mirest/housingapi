@@ -1,0 +1,6 @@
+.env
+.vscode
+*.pyc
+.coverage
+.pytest_cache
+htmlcov
