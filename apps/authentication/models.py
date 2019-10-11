@@ -1,14 +1,19 @@
-from django.contrib.auth.models import AbstractUser, Group
+from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.contrib.auth.models import Group
+from django.utils.translation import gettext_lazy as _
+from .token_generator import get_tokens_for_user as get_token
 
 
 class User(AbstractUser):
-    id = models.IntegerField(db_column='UserId', primary_key=True)
     phone = models.CharField(max_length=20)
     occupation = models.CharField(max_length=50, blank=True, null=True)
     image = models.CharField(max_length=50, blank=True, null=True)
     interests = models.TextField(blank=True, null=True)
+    email = models.EmailField(_('email address'), unique=True)
+
+    USERNAME_FIELD = 'email'
+
+    REQUIRED_FIELDS = ['phone']
 
     class Meta:
         db_table = 'User'
@@ -16,6 +21,5 @@ class User(AbstractUser):
     def __str__(self):
         return '<User {}>'.format(self.email)
 
-
-Group.add_to_class('location', models.CharField(
-    max_length=180, null=True, blank=True))
+    def token(self):
+        return get_token(self)

@@ -30,7 +30,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "not a secret ")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG")
 
-ALLOWED_HOSTS = ('localhost', '127.0.0.1',)
+ALLOWED_HOSTS = ('localhost', '127.0.0.1', '0.0.0.0')
 
 
 # Application definition
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'apps.authentication',
 ]
 
@@ -56,10 +57,6 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
-CORS_ORIGIN_WHITELIST = (
-    'http://localhost:3000',
-    "http://127.0.0.1:3000",
-)
 ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
@@ -135,8 +132,12 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
-
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
+}
 
 AUTH_USER_MODEL = 'authentication.User'
 
