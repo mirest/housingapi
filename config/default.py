@@ -30,7 +30,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "not a secret ")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG")
 
-ALLOWED_HOSTS = ('localhost', '127.0.0.1',)
+ALLOWED_HOSTS = ('localhost', '127.0.0.1', '0.0.0.0')
 
 
 # Application definition
@@ -135,10 +135,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
 }
 
 AUTH_USER_MODEL = 'authentication.User'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-

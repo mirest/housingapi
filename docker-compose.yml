@@ -1,0 +1,36 @@
+version: "2.1"
+
+services:
+  database:
+    restart: always
+    image: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres_pass
+      - POSTGRES_DB=house_db
+    ports:
+      - "5433:5432"
+    expose:
+      - "5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-d", "house_db", "-U", "postgres"]
+      timeout: 5s
+      retries: 2
+  web:
+    build: .
+    volumes:
+      - .:/housing
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres_pass@database:5432/house_db
+      - DEBUG=False
+
+    depends_on:
+      database:
+        condition: service_healthy
+    command: >
+      bash -c "python manage.py migrate
+      && python manage.py runserver 0.0.0.0:5000"
